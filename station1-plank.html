@@ -144,7 +144,7 @@
 </head>
 <body>
 <audio id="introAudio">
-  <source src="round1-intro.mpeg" type="audio/mpeg">
+  <source src="round1-intro.mpeg" type="audio/mp3">
 </audio>
 
 <script>
@@ -269,7 +269,7 @@
     correctMsg.style.display = "none";
 
     if(CORRECT_ANSWERS.includes(val)){
-      let audio = new Audio("round1-complete.mpeg");
+      let audio = new Audio("round1-complete.mp3");
       audio.play();
       solved = true;
       correctMsg.style.display = "block";
