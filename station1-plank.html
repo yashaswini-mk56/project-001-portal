@@ -143,6 +143,9 @@
 </style>
 </head>
 <body>
+  <audio autoplay>
+  <source src="round1-intro.mpeg" type="audio/mpeg">
+  </audio>
 <div class="container">
   <div class="top-bar">
     <span>PROJECT_001 // TRIAL_1</span>
@@ -257,6 +260,8 @@
     correctMsg.style.display = "none";
 
     if(CORRECT_ANSWERS.includes(val)){
+      let audio = new Audio("round1-complete.mpeg");
+      audio.play();
       solved = true;
       correctMsg.style.display = "block";
       document.getElementById("codeReveal").style.display = "block";
