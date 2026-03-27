@@ -291,13 +291,6 @@
         introAudio.pause();
         introAudio.currentTime = 0;
       }
-
-      // 🔥 COMPLETION AUDIO
-      setTimeout(() => {
-        let audio = new Audio("round1-completion.mp3");
-        audio.play().catch(() => {});
-      }, 200);
-
       solved = true;
 
       correctMsg.style.display = "block";
