@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Access Terminal</title>
+
+    <style>
+        body {
+            background: black;
+            color: #00ff99;
+            font-family: monospace;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 18px;
+            background: black;
+            border: 2px solid #00ff99;
+            color: #00ff99;
+            text-align: center;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: black;
+            border: 2px solid #00ff99;
+            color: #00ff99;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 30px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>ACCESS TERMINAL</h1>
+    <p>Enter final code to proceed</p>
+
+    <input type="text" id="code" placeholder="ENTER CODE">
+    <br>
+    <button onclick="checkCode()">SUBMIT</button>
+
+    <div id="result"></div>
+
+    <script>
+        function checkCode() {
+            let userCode = document.getElementById("code").value;
+
+            if (userCode === "THE229") {
+                document.getElementById("result").innerHTML = 
+                    "✅ ACCESS GRANTED<br>Loading Round 2...";
+
+                setTimeout(function() {
+                    window.location.href = "round2-silent-scatter.html";
+                }, 2000);
+            } else {
+                document.getElementById("result").innerHTML = 
+                    "❌ ACCESS DENIED";
+            }
+        }
+    </script>
+
+</body>
+</html>
