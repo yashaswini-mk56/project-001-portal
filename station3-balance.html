@@ -164,26 +164,40 @@
     <span id="clockDisplay"></span>
   </div>
 </div>
-
 <script>
   let selected = null;
   let attempts = 0;
   let solved = false;
   const CORRECT = "b";
 
+  // 🔥 PRELOAD AUDIO (IMPORTANT)
+  const completionAudio = new Audio("round1-completion.mp3");
+
   function updateClock(){
-    document.getElementById("clockDisplay").textContent = new Date().toTimeString().slice(0,8);
+    document.getElementById("clockDisplay").textContent =
+      new Date().toTimeString().slice(0,8);
   }
-  setInterval(updateClock,1000); updateClock();
+  setInterval(updateClock,1000);
+  updateClock();
 
   function selectOption(opt){
     if(solved) return;
+
     selected = opt;
+
     ["a","b","c","d"].forEach(o=>{
       document.getElementById("opt-"+o).classList.remove("selected");
     });
+
     document.getElementById("opt-"+opt).classList.add("selected");
+
     document.getElementById("submitBtn").disabled = false;
+
+    // 🔥 IMPORTANT: unlock audio (browser requirement)
+    completionAudio.play().then(()=>{
+      completionAudio.pause();
+      completionAudio.currentTime = 0;
+    }).catch(()=>{});
   }
 
   const wrongMsgs = [
@@ -195,34 +209,56 @@
 
   function checkAnswer(){
     if(solved || !selected) return;
+
     const wrongMsg = document.getElementById("wrongMsg");
     wrongMsg.style.display = "none";
 
     if(selected === CORRECT){
-       let audio = new Audio("round1-completion.mp3");
-       audio.currentTime = 0;
-       audio.play().catch(()=>{});
+
+      // 🔥 PLAY AUDIO (NOW GUARANTEED)
+      completionAudio.currentTime = 0;
+      completionAudio.play().catch(()=>{});
+
       solved = true;
+
       ["a","b","c","d"].forEach(o=>{
         document.getElementById("opt-"+o).style.pointerEvents = "none";
       });
+
       document.getElementById("opt-b").classList.add("correct-ans");
-      document.getElementById("submitBtn").disabled = true;
+
+      // 🔥 delay disable (IMPORTANT FIX)
+      setTimeout(()=>{
+        document.getElementById("submitBtn").disabled = true;
+      }, 300);
+
       document.getElementById("codeReveal").style.display = "block";
+
       setTimeout(()=>{
         document.getElementById("passwordSection").style.display = "block";
       }, 1500);
+
     } else {
+
       attempts++;
+
       document.getElementById("opt-"+selected).classList.add("wrong-ans");
+
       setTimeout(()=>{
         document.getElementById("opt-"+selected).classList.remove("wrong-ans","selected");
       }, 800);
+
       selected = null;
       document.getElementById("submitBtn").disabled = true;
-      wrongMsg.textContent = wrongMsgs[Math.min(attempts-1, wrongMsgs.length-1)];
+
+      wrongMsg.textContent =
+        wrongMsgs[Math.min(attempts-1, wrongMsgs.length-1)];
+
       wrongMsg.style.display = "block";
-      setTimeout(()=>{ wrongMsg.style.display="none"; }, 3500);
+
+      setTimeout(()=>{
+        wrongMsg.style.display="none";
+      }, 3500);
     }
   }
 </script>
