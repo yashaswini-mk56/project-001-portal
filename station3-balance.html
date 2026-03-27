@@ -199,6 +199,10 @@
     wrongMsg.style.display = "none";
 
     if(selected === CORRECT){
+      setTimeout(() => {
+        let audio = new Audio("round1-completion.mp3");
+        audio.play().catch(() => {});
+      }, 200);
       solved = true;
       ["a","b","c","d"].forEach(o=>{
         document.getElementById("opt-"+o).style.pointerEvents = "none";
