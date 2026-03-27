@@ -209,6 +209,15 @@ document.addEventListener("click", function(){
 </div>
 
 <script>
+  let introPlayed = false;
+
+function playIntro(){
+  if(!introPlayed){
+    let audio = new Audio("round1-intro.mp3");
+    audio.play().catch(()=>{});
+    introPlayed = true;
+  }
+}
   // ─── CONFIG ───────────────────────────────────────────────────────────────
   const RIDDLE = '"I speak without a mouth and hear without ears. I have no body, but come alive with wind. What am I?"';
   const CORRECT_ANSWERS = ["echo"];
@@ -244,7 +253,9 @@ document.addEventListener("click", function(){
     }
   }, 1000);
 
-  document.getElementById("answerInput").addEventListener("keydown",e=>{
+  document.getElementById("answerInput").addEventListener("keydown", e=>{
+    playIntro();   // 👈 ADD THIS LINE
+  
     if(e.key==="Enter") checkAnswer();
   });
 
