@@ -148,13 +148,12 @@
 </audio>
 
 <script>
-  window.onload = function() {
-    let audio = document.getElementById("introAudio");
-    audio.play().catch(() => {
-      console.log("Autoplay blocked");
-    });
-  };
+document.addEventListener("click", function(){
+  let audio = document.getElementById("introAudio");
+  audio.play().catch(() => {});
+}, { once: true });
 </script>
+  
 <div class="container">
   <div class="top-bar">
     <span>PROJECT_001 // TRIAL_1</span>
@@ -269,8 +268,11 @@
     correctMsg.style.display = "none";
 
     if(CORRECT_ANSWERS.includes(val)){
-      let audio = new Audio("round1-completion.mp3");
-      audio.play();
+      setTimeout(() => {
+        let audio = new Audio("round1-completion.mp3");
+        audio.play().catch(() => {});
+      }, 200);
+      
       solved = true;
       correctMsg.style.display = "block";
       document.getElementById("codeReveal").style.display = "block";
