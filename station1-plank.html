@@ -198,20 +198,26 @@
 </div>
 
 <script>
+  // 🔥 INTRO AUDIO CONTROL
   let introPlayed = false;
 
   function playIntro(){
-     if(!introPlayed){
-        let audio = new Audio("round1-intro.mp3");
-        audio.play().catch(()=>{});
-        introPlayed = true;
+    if(!introPlayed){
+      let audio = new Audio("round1-intro.mp3");
+
+      // ensure it starts from beginning
+      audio.currentTime = 0;
+
+      audio.play().catch(()=>{});
+      introPlayed = true;
     }
- }
-  // ─── CONFIG ───────────────────────────────────────────────────────────────
+  }
+
+  // ─── CONFIG ─────────────────────────────────────────
   const RIDDLE = '"I speak without a mouth and hear without ears. I have no body, but come alive with wind. What am I?"';
   const CORRECT_ANSWERS = ["echo"];
   const CODE_LETTER = "T";
-  // ──────────────────────────────────────────────────────────────────────────
+  // ────────────────────────────────────────────────────
 
   let attempts = 0;
   let solved = false;
@@ -219,30 +225,38 @@
   document.getElementById("riddleText").textContent = RIDDLE;
   document.getElementById("codeLetter").textContent = CODE_LETTER;
 
-  // Clock
+  // 🕒 CLOCK
   function updateClock(){
     const now = new Date();
     document.getElementById("clockDisplay").textContent =
       now.toTimeString().slice(0,8);
   }
-  setInterval(updateClock,1000); updateClock();
+  setInterval(updateClock,1000); 
+  updateClock();
 
-  // Countdown
+  // ⏳ COUNTDOWN
   let count = 5;
   const countNum = document.getElementById("countNum");
+
   const timer = setInterval(()=>{
     count--;
+
     if(count <= 0){
       clearInterval(timer);
+
       document.getElementById("countdownSection").style.display = "none";
       document.getElementById("riddleSection").style.display = "block";
-      document.getElementById("answerInput").focus();
-      playIntro();
-    } else {
+
+      // 🔥 IMPORTANT ORDER
+      playIntro();  // FIRST play audio
+      document.getElementById("answerInput").focus(); // THEN focus
+    } 
+    else {
       countNum.textContent = count;
     }
   }, 1000);
 
+  // ⌨️ ENTER KEY
   document.getElementById("answerInput").addEventListener("keydown", e=>{
     if(e.key==="Enter") checkAnswer();
   });
@@ -255,40 +269,62 @@
     "✗ WRONG. EVERY FAILURE IS DATA FOR ME.",
   ];
 
+  // ✅ CHECK ANSWER
   function checkAnswer(){
     if(solved) return;
+
     const input = document.getElementById("answerInput");
     const val = input.value.trim().toLowerCase();
     if(!val) return;
 
     const wrongMsg = document.getElementById("wrongMsg");
     const correctMsg = document.getElementById("correctMsg");
+
     wrongMsg.style.display = "none";
     correctMsg.style.display = "none";
 
     if(CORRECT_ANSWERS.includes(val)){
+
+      // 🔥 STOP INTRO AUDIO IF STILL PLAYING
+      const introAudio = document.querySelector("audio");
+      if(introAudio){
+        introAudio.pause();
+        introAudio.currentTime = 0;
+      }
+
+      // 🔥 COMPLETION AUDIO
       setTimeout(() => {
         let audio = new Audio("round1-completion.mp3");
         audio.play().catch(() => {});
       }, 200);
-      
+
       solved = true;
+
       correctMsg.style.display = "block";
       document.getElementById("codeReveal").style.display = "block";
+
       input.disabled = true;
+
       document.querySelector(".btn").disabled = true;
       document.querySelector(".btn").style.opacity = "0.3";
+
       document.getElementById("attemptsText").textContent =
         `SOLVED IN ${attempts+1} ATTEMPT${attempts===0?"":"S"} // DATA LOGGED`;
+
     } else {
       attempts++;
+
       input.classList.remove("shake");
       void input.offsetWidth;
       input.classList.add("shake");
+
       input.value = "";
+
       wrongMsg.textContent = wrongMsgs[Math.min(attempts-1, wrongMsgs.length-1)];
       wrongMsg.style.display = "block";
+
       document.getElementById("attemptsText").textContent = `ATTEMPTS: ${attempts}`;
+
       setTimeout(()=>{ wrongMsg.style.display="none"; }, 3000);
     }
   }
