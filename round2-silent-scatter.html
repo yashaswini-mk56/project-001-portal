@@ -225,6 +225,23 @@
 </div>
 
 <script>
+  // 🔥 ROUND 2 INTRO AUDIO
+  let introPlayed = false;
+
+  function playIntro(){
+    if(!introPlayed){
+      let audio = new Audio("round2-intro.mp3");
+      audio.currentTime = 0;
+      audio.play().catch(()=>{});
+      introPlayed = true;
+    }
+  }
+  // play intro after slight delay
+  window.onload = () => {
+    setTimeout(() => {
+      playIntro();
+    }, 500);
+  };
   const RIDDLES = [
     { answers: ["cloud"], word: "SEARCH" },
     { answers: ["breath", "breathe"], word: "THE" },
@@ -280,6 +297,9 @@
           document.getElementById("inp"+currentRiddle).focus();
         } else {
           // All done
+          let audio = new Audio("round2-completion.mp3");
+          audio.currentTime = 0;
+          audio.play().catch(()=>{});
           document.getElementById("riddle5").classList.remove("active");
           document.getElementById("finalReveal").style.display = "block";
         }
