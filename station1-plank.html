@@ -143,9 +143,18 @@
 </style>
 </head>
 <body>
-  <audio autoplay>
+<audio id="introAudio">
   <source src="round1-intro.mpeg" type="audio/mpeg">
-  </audio>
+</audio>
+
+<script>
+  window.onload = function() {
+    let audio = document.getElementById("introAudio");
+    audio.play().catch(() => {
+      console.log("Autoplay blocked");
+    });
+  };
+</script>
 <div class="container">
   <div class="top-bar">
     <span>PROJECT_001 // TRIAL_1</span>
