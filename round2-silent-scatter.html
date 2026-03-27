@@ -223,25 +223,7 @@
     <span id="clockDisplay"></span>
   </div>
 </div>
-
 <script>
-  // 🔥 ROUND 2 INTRO AUDIO
-  let introPlayed = false;
-
-  function playIntro(){
-    if(!introPlayed){
-      let audio = new Audio("round2-intro.mp3");
-      audio.currentTime = 0;
-      audio.play().catch(()=>{});
-      introPlayed = true;
-    }
-  }
-  // play intro after slight delay
-  window.onload = () => {
-    setTimeout(() => {
-      playIntro();
-    }, 500);
-  };
   const RIDDLES = [
     { answers: ["cloud"], word: "SEARCH" },
     { answers: ["breath", "breathe"], word: "THE" },
@@ -254,11 +236,32 @@
   let currentRiddle = 0;
   let riddleAttempts = [0,0,0,0,0,0];
 
-  function updateClock(){
-    document.getElementById("clockDisplay").textContent = new Date().toTimeString().slice(0,8);
-  }
-  setInterval(updateClock,1000); updateClock();
+  // 🔥 AUDIO SETUP
+  let introPlayed = false;
+  const introAudio = new Audio("round2-intro.mp3");
+  const completionAudio = new Audio("round2-completion.mp3");
 
+  function playIntro(){
+    if(!introPlayed){
+      introAudio.currentTime = 0;
+      introAudio.play().catch(()=>{});
+      introPlayed = true;
+    }
+  }
+
+  function updateClock(){
+    document.getElementById("clockDisplay").textContent =
+      new Date().toTimeString().slice(0,8);
+  }
+  setInterval(updateClock,1000);
+  updateClock();
+
+  // 🔥 USER INTERACTION TRIGGER (IMPORTANT)
+  document.addEventListener("keydown", function(){
+    playIntro();
+  }, { once: true });
+
+  // Enter key listeners
   for(let i=0;i<6;i++){
     document.getElementById("inp"+i).addEventListener("keydown",((idx)=>(e)=>{
       if(e.key==="Enter") check(idx);
@@ -274,15 +277,18 @@
 
   function check(idx){
     if(idx !== currentRiddle) return;
+
     const input = document.getElementById("inp"+idx);
     const val = input.value.trim().toLowerCase();
     if(!val) return;
+
     const wrongMsg = document.getElementById("wrong"+idx);
     wrongMsg.style.display = "none";
 
     if(RIDDLES[idx].answers.includes(val)){
-      // Correct
+
       input.disabled = true;
+
       document.getElementById("wreveal"+idx).style.display = "block";
       document.getElementById("dot"+idx).classList.remove("active");
       document.getElementById("dot"+idx).classList.add("done");
@@ -290,28 +296,41 @@
 
       setTimeout(()=>{
         if(idx < 5){
+
           document.getElementById("riddle"+idx).classList.remove("active");
           currentRiddle++;
+
           document.getElementById("riddle"+currentRiddle).classList.add("active");
           document.getElementById("dot"+currentRiddle).classList.add("active");
+
           document.getElementById("inp"+currentRiddle).focus();
+
         } else {
-          // All done
-          let audio = new Audio("round2-completion.mp3");
-          audio.currentTime = 0;
-          audio.play().catch(()=>{});
+
+          // 🔥 FINAL COMPLETION AUDIO
+          completionAudio.currentTime = 0;
+          completionAudio.play().catch(()=>{});
+
           document.getElementById("riddle5").classList.remove("active");
           document.getElementById("finalReveal").style.display = "block";
         }
       }, 1400);
+
     } else {
+
       riddleAttempts[idx]++;
+
       input.classList.remove("shake");
       void input.offsetWidth;
       input.classList.add("shake");
+
       input.value = "";
-      wrongMsg.textContent = wrongMsgs[Math.min(riddleAttempts[idx]-1, wrongMsgs.length-1)];
+
+      wrongMsg.textContent =
+        wrongMsgs[Math.min(riddleAttempts[idx]-1, wrongMsgs.length-1)];
+
       wrongMsg.style.display = "block";
+
       setTimeout(()=>{ wrongMsg.style.display="none"; }, 3000);
     }
   }
