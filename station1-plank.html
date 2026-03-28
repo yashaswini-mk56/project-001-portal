@@ -112,109 +112,132 @@
 </div>
 
 <script>
-  let introPlayed = false;
-  
-  function playIntro(){
-    if(!introPlayed){
-      let audio = new Audio("round1-intro.mp3");
-      audio.play().catch(()=>{});
-      introPlayed = true;
+  // 🔊 INTRO AUDIO
+    let introPlayed = false;
+    
+    function playIntro(){
+      if(!introPlayed){
+        let audio = new Audio("audio/round1-intro.mp3");
+        audio.play().catch(()=>{});
+        introPlayed = true;
+      }
     }
-  }
-  
-  // ✅ trigger on user interaction
-  document.addEventListener("click", function(){
-    playIntro();
-  }, { once: true });
-  
-  document.addEventListener("keydown", function(){
-    playIntro();
-  }, { once: true });
-  // ═══════════════ CHANGE PER STATION ═══════════════
-  const RIDDLE = "Who makes it has no need of it.\nWho buys it has no use for it.\nWho uses it can neither see it nor feel it.\n\nWhat is it?";
-  const CORRECT_ANSWERS = ["coffin","a coffin"];
-  const CODE_LETTER = "T";
-  // ══════════════════════════════════════════════════
-
-  const PENALTY_SECONDS=30,MAX_STRIKES=3;
-  let attempts=0,solved=false,strikes=0,penaltyTimer=null,penaltyRemaining=0,isInPenalty=false,overlayVisible=false,lastCheatTime=0;
-
-  document.getElementById("riddleText").textContent=RIDDLE;
-  document.getElementById("codeLetter").textContent=CODE_LETTER;
-
-  const sdEl=document.getElementById("strikeDots");
-  for(let i=0;i<MAX_STRIKES;i++){const d=document.createElement("div");d.className="strike-dot";d.id="dot-"+i;sdEl.appendChild(d);}
-
-  function updateClock(){document.getElementById("clockDisplay").textContent=new Date().toTimeString().slice(0,8);}
-  setInterval(updateClock,1000);updateClock();
-
-  let count=10;
-  const plankTimer=setInterval(()=>{count--;if(count<=0){clearInterval(plankTimer);document.getElementById("countdownSection").style.display="none";document.getElementById("riddleSection").style.display="block";if(!isInPenalty)document.getElementById("answerInput").focus();}else{document.getElementById("countNum").textContent=count;}},1000);
-
-  document.getElementById("answerInput").addEventListener("keydown",e=>{if(e.key==="Enter")checkAnswer();});
-
-  const cheatPhrases=["Cheating detected. Mr. Whatsit is watching you. Thirty second penalty applied.","You switched tabs. That was a mistake. Mr. Whatsit sees everything.","Nice try. Cheating logged. Thirty seconds added to your suffering."];
-
-  function playCheatAudio(){
-    const a=document.getElementById("cheatAudio");
-    if(a&&a.readyState>=2){a.currentTime=0;a.play().catch(()=>speakFallback());document.getElementById("voiceStatus").style.display="block";a.onended=()=>{document.getElementById("voiceStatus").style.display="none";};}
-    else speakFallback();
-  }
-  function speakFallback(){
-    if(!window.speechSynthesis)return;
-    window.speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(cheatPhrases[Math.min(strikes-1,cheatPhrases.length-1)]);
-    u.rate=0.85;u.pitch=0.6;u.volume=1;
-    const vs=window.speechSynthesis.getVoices();
-    const pv=vs.find(v=>v.lang==="en-GB"||v.name.toLowerCase().includes("daniel"));
-    if(pv)u.voice=pv;
-    u.onstart=()=>{document.getElementById("voiceStatus").style.display="block";};
-    u.onend=()=>{document.getElementById("voiceStatus").style.display="none";};
-    window.speechSynthesis.speak(u);
-  }
-  if(window.speechSynthesis){window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();}
-
-  function triggerCheat(){
-    if(solved)return;
-    const now=Date.now();if(now-lastCheatTime<2000)return;lastCheatTime=now;
-    strikes++;
-    for(let i=0;i<MAX_STRIKES;i++){if(i<strikes)document.getElementById("dot-"+i).classList.add("active");}
-    document.getElementById("cheatLog").textContent=`INFRACTION #${strikes} — TIMESTAMP: ${new Date().toTimeString().slice(0,8)}`;
-    playCheatAudio();
-    isInPenalty=true;overlayVisible=true;penaltyRemaining=PENALTY_SECONDS;
-    document.getElementById("penaltyCountdown").textContent=penaltyRemaining;
-    document.getElementById("cheatOverlay").classList.add("active");
-    document.getElementById("answerInput").disabled=true;
-    document.getElementById("submitBtn").disabled=true;
-    clearInterval(penaltyTimer);
-    penaltyTimer=setInterval(()=>{penaltyRemaining--;document.getElementById("penaltyCountdown").textContent=penaltyRemaining;if(penaltyRemaining<=0){clearInterval(penaltyTimer);isInPenalty=false;if(overlayVisible)dismissOverlay();document.getElementById("answerInput").disabled=false;document.getElementById("submitBtn").disabled=false;document.getElementById("answerInput").focus();}},1000);
-  }
-  function dismissOverlay(){document.getElementById("cheatOverlay").classList.remove("active");overlayVisible=false;}
-  document.addEventListener("visibilitychange",()=>{if(document.hidden)triggerCheat();});
-  window.addEventListener("blur",()=>triggerCheat());
-
-  const wrongMsgs=["✗ INCORRECT. MR. WHATSIT NOTES YOUR FAILURE. TRY AGAIN.","✗ NEGATIVE. RECALIBRATE YOUR THINKING.","✗ ERROR. WEAKNESS PATTERN LOGGED. ATTEMPT AGAIN.","✗ STILL INCORRECT. MR. WHATSIT IS DISAPPOINTED.","✗ WRONG. EVERY FAILURE IS DATA FOR ME."];
-
-  function checkAnswer(){
-    if(solved||isInPenalty)return;
-    const input=document.getElementById("answerInput");
-    const val=input.value.trim().toLowerCase();if(!val)return;
-    document.getElementById("wrongMsg").style.display="none";
-    document.getElementById("correctMsg").style.display="none";
-    if(CORRECT_ANSWERS.includes(val)){
-      solved=true;
-      document.getElementById("correctMsg").style.display="block";
-      document.getElementById("codeReveal").style.display="block";
-      input.disabled=true;document.getElementById("submitBtn").disabled=true;
-      document.getElementById("attemptsText").textContent=`SOLVED IN ${attempts+1} ATTEMPT${attempts===0?"":"S"} // DATA LOGGED`;
-    }else{
-      attempts++;input.classList.remove("shake");void input.offsetWidth;input.classList.add("shake");input.value="";
-      const wm=document.getElementById("wrongMsg");
-      wm.textContent=wrongMsgs[Math.min(attempts-1,wrongMsgs.length-1)];wm.style.display="block";
-      document.getElementById("attemptsText").textContent=`ATTEMPTS: ${attempts}`;
-      setTimeout(()=>{wm.style.display="none";},3000);
+    
+    // ✅ trigger on first user interaction
+    document.addEventListener("click", function(){
+      playIntro();
+    }, { once: true });
+    
+    document.addEventListener("keydown", function(){
+      playIntro();
+    }, { once: true });
+    
+    
+    // ═══════════════ CHANGE PER STATION ═══════════════
+    const RIDDLE = "Who makes it has no need of it.\nWho buys it has no use for it.\nWho uses it can neither see it nor feel it.\n\nWhat is it?";
+    const CORRECT_ANSWERS = ["coffin","a coffin"];
+    const CODE_LETTER = "T";
+    // ══════════════════════════════════════════════════
+    
+    
+    const PENALTY_SECONDS=30,MAX_STRIKES=3;
+    let attempts=0,solved=false,strikes=0,penaltyTimer=null,penaltyRemaining=0,isInPenalty=false,overlayVisible=false,lastCheatTime=0;
+    
+    document.getElementById("riddleText").textContent=RIDDLE;
+    document.getElementById("codeLetter").textContent=CODE_LETTER;
+    
+    
+    // CLOCK
+    function updateClock(){
+      document.getElementById("clockDisplay").textContent=new Date().toTimeString().slice(0,8);
     }
-  }
-</script>
-</body>
-</html>
+    setInterval(updateClock,1000);
+    updateClock();
+    
+    
+    // 🔥 COUNTDOWN (IMPORTANT FIX HERE)
+    let count=10;
+    const plankTimer=setInterval(()=>{
+      count--;
+    
+      if(count<=0){
+        clearInterval(plankTimer);
+    
+        document.getElementById("countdownSection").style.display="none";
+        document.getElementById("riddleSection").style.display="block";
+    
+        // 🔥 PLAY INTRO HERE (MAIN FIX)
+        playIntro();
+    
+        if(!isInPenalty)
+          document.getElementById("answerInput").focus();
+      }
+      else{
+        document.getElementById("countNum").textContent=count;
+      }
+    },1000);
+    
+    
+    // ENTER KEY
+    document.getElementById("answerInput").addEventListener("keydown",e=>{
+      if(e.key==="Enter") checkAnswer();
+    });
+    
+    
+    // WRONG MESSAGES
+    const wrongMsgs=[
+    "✗ INCORRECT. MR. WHATSIT NOTES YOUR FAILURE. TRY AGAIN.",
+    "✗ NEGATIVE. RECALIBRATE YOUR THINKING.",
+    "✗ ERROR. WEAKNESS PATTERN LOGGED. ATTEMPT AGAIN.",
+    "✗ STILL INCORRECT. MR. WHATSIT IS DISAPPOINTED.",
+    "✗ WRONG. EVERY FAILURE IS DATA FOR ME."
+    ];
+    
+    
+    // CHECK ANSWER
+    function checkAnswer(){
+      if(solved||isInPenalty) return;
+    
+      const input=document.getElementById("answerInput");
+      const val=input.value.trim().toLowerCase();
+      if(!val) return;
+    
+      document.getElementById("wrongMsg").style.display="none";
+      document.getElementById("correctMsg").style.display="none";
+    
+      if(CORRECT_ANSWERS.includes(val)){
+    
+        // 🔊 COMPLETION AUDIO (ONLY IF YOU WANT HERE)
+        // let audio = new Audio("audio/round1-completion.mp3");
+        // audio.play().catch(()=>{});
+    
+        solved=true;
+    
+        document.getElementById("correctMsg").style.display="block";
+        document.getElementById("codeReveal").style.display="block";
+    
+        input.disabled=true;
+        document.getElementById("submitBtn").disabled=true;
+    
+        document.getElementById("attemptsText").textContent=
+          `SOLVED IN ${attempts+1} ATTEMPT${attempts===0?"":"S"} // DATA LOGGED`;
+    
+      } else {
+    
+        attempts++;
+    
+        input.classList.remove("shake");
+        void input.offsetWidth;
+        input.classList.add("shake");
+    
+        input.value="";
+    
+        const wm=document.getElementById("wrongMsg");
+        wm.textContent=wrongMsgs[Math.min(attempts-1,wrongMsgs.length-1)];
+        wm.style.display="block";
+    
+        document.getElementById("attemptsText").textContent=`ATTEMPTS: ${attempts}`;
+    
+        setTimeout(()=>{ wm.style.display="none"; },3000);
+      }
+    }
