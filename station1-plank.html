@@ -112,6 +112,19 @@
 </div>
 
 <script>
+  let introPlayed = false;
+
+  function playIntro(){
+    if(!introPlayed){
+      let audio = new Audio("round1-intro.mp3"); // change per round
+      audio.play().catch(()=>{});
+      introPlayed = true;
+    }
+  }
+
+window.onload = function(){
+  playIntro();
+};
   // ═══════════════ CHANGE PER STATION ═══════════════
   const RIDDLE = "Who makes it has no need of it.\nWho buys it has no use for it.\nWho uses it can neither see it nor feel it.\n\nWhat is it?";
   const CORRECT_ANSWERS = ["coffin","a coffin"];
