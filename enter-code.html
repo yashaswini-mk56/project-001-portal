@@ -49,21 +49,20 @@
     <div id="result"></div>
 
     <script>
-        function checkCode(){
-        let input = document.getElementById("codeInput").value.trim().toUpperCase();
+      function checkCode(){
+          let input = document.getElementById("code").value.trim().toUpperCase();
         
           // 🔹 Round 1 → Round 2
-        if(input === "THE229"){
+          if(input === "THE229"){
             document.getElementById("result").innerHTML = "Round 2 Unlocked 🔓";
         
             setTimeout(()=>{
               window.location.href = "round2-silent-scatter.html";
             }, 2000);
-         }
+          }
         
           // 🔹 Round 3 → Final Round
-         else if(input === "SEARCHTHEHIDDENFREQUENCYINMUSIC"){
-        
+          else if(input === "SEARCHTHEHIDDENFREQUENCYINMUSIC"){
             let audio = new Audio("round3-completion.mp3");
             audio.play().catch(()=>{});
         
