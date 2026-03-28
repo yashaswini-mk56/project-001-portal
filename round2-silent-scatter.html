@@ -15,42 +15,24 @@
   @keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
   .main-card{border:1px solid #00ff41;padding:36px 32px;background:rgba(0,255,65,0.03);position:relative;}
   .corner{position:absolute;width:12px;height:12px;border-color:#00ff41;border-style:solid;}
-  .corner.tl{top:-1px;left:-1px;border-width:2px 0 0 2px;}
-  .corner.tr{top:-1px;right:-1px;border-width:2px 2px 0 0;}
-  .corner.bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px;}
-  .corner.br{bottom:-1px;right:-1px;border-width:0 2px 2px 0;}
+  .corner.tl{top:-1px;left:-1px;border-width:2px 0 0 2px;} .corner.tr{top:-1px;right:-1px;border-width:2px 2px 0 0;}
+  .corner.bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px;} .corner.br{bottom:-1px;right:-1px;border-width:0 2px 2px 0;}
   .round-id{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:#00ff41;opacity:0.5;letter-spacing:0.2em;margin-bottom:16px;}
   .title{font-family:'Orbitron',monospace;font-size:24px;font-weight:900;color:#00ff41;line-height:1.2;margin-bottom:8px;text-shadow:0 0 20px rgba(0,255,65,0.5);}
   .subtitle{font-size:12px;opacity:0.5;margin-bottom:28px;letter-spacing:0.1em;line-height:1.7;}
   .divider{border:none;border-top:1px solid rgba(0,255,65,0.2);margin:20px 0;}
-
-  /* Progress dots */
   .dots{display:flex;gap:8px;margin-bottom:24px;justify-content:center;}
   .dot{width:10px;height:10px;border:1px solid rgba(0,255,65,0.4);border-radius:50%;}
   .dot.done{background:#00ff41;border-color:#00ff41;box-shadow:0 0 6px rgba(0,255,65,0.6);}
   .dot.active{border-color:#00ff41;animation:pulseDot 1s ease-in-out infinite;}
   @keyframes pulseDot{0%,100%{box-shadow:0 0 0 0 rgba(0,255,65,0.4);}50%{box-shadow:0 0 0 4px rgba(0,255,65,0.1);}}
-
-  /* Riddle card */
   .riddle-card{display:none;animation:fadeIn 0.4s ease;}
   .riddle-card.active{display:block;}
   @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
   .riddle-num{font-size:11px;opacity:0.5;letter-spacing:0.15em;margin-bottom:10px;}
-  .riddle-question{
-    border:1px solid rgba(0,255,65,0.3);padding:20px;
-    background:rgba(0,255,65,0.03);
-    font-size:16px;line-height:1.7;
-    font-style:italic;margin-bottom:20px;
-    text-shadow:0 0 8px rgba(0,255,65,0.2);
-  }
+  .riddle-question{border:1px solid rgba(0,255,65,0.3);padding:20px;background:rgba(0,255,65,0.03);font-size:16px;line-height:1.7;font-style:italic;margin-bottom:20px;text-shadow:0 0 8px rgba(0,255,65,0.2);}
   .input-label{font-size:11px;opacity:0.6;letter-spacing:0.15em;margin-bottom:8px;}
-  input[type=text]{
-    width:100%;padding:14px 16px;
-    background:rgba(0,255,65,0.05);border:1px solid #00ff41;
-    color:#00ff41;font-family:'Share Tech Mono',monospace;font-size:15px;
-    outline:none;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.1em;
-    transition:box-shadow 0.2s;
-  }
+  input[type=text]{width:100%;padding:14px 16px;background:rgba(0,255,65,0.05);border:1px solid #00ff41;color:#00ff41;font-family:'Share Tech Mono',monospace;font-size:15px;outline:none;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.1em;transition:box-shadow 0.2s;}
   input[type=text]:focus{box-shadow:0 0 15px rgba(0,255,65,0.3);}
   input.shake{animation:shake 0.4s ease;}
   @keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-5px);}80%{transform:translateX(5px);}}
@@ -59,52 +41,64 @@
   .msg{padding:12px;font-size:12px;margin-top:8px;display:none;line-height:1.5;}
   .msg.wrong{border:1px solid #ff4444;color:#ff6666;background:rgba(255,0,0,0.05);}
   .msg.correct-step{border:1px solid #00ff41;color:#00ff41;background:rgba(0,255,65,0.05);}
-
-  /* Word collected */
-  .word-collected{
-    margin-top:12px;padding:12px 16px;
-    border:1px solid rgba(0,255,65,0.3);background:rgba(0,255,65,0.05);
-    font-size:12px;display:none;
-  }
+  .word-collected{margin-top:12px;padding:12px 16px;border:1px solid rgba(0,255,65,0.3);background:rgba(0,255,65,0.05);font-size:12px;display:none;}
   .word-val{font-family:'Orbitron',monospace;font-size:18px;font-weight:700;color:#00ff41;letter-spacing:0.15em;}
-
-  /* Sentence builder */
   .sentence-builder{margin:20px 0;padding:16px;border:1px solid rgba(0,255,65,0.2);background:rgba(0,255,65,0.02);}
   .sb-label{font-size:11px;opacity:0.4;letter-spacing:0.12em;margin-bottom:10px;}
   .words-row{display:flex;flex-wrap:wrap;gap:6px;}
-  .word-chip{
-    padding:6px 12px;border:1px solid rgba(0,255,65,0.2);
-    font-size:12px;background:rgba(0,255,65,0.03);
-    opacity:0.3;transition:opacity 0.3s,border-color 0.3s;
-  }
+  .word-chip{padding:6px 12px;border:1px solid rgba(0,255,65,0.2);font-size:12px;background:rgba(0,255,65,0.03);opacity:0.3;transition:opacity 0.3s,border-color 0.3s;}
   .word-chip.revealed{opacity:1;border-color:#00ff41;box-shadow:0 0 6px rgba(0,255,65,0.2);}
 
-  /* Final reveal */
-  .final-reveal{
-    display:none;border:1px solid #00ff41;padding:28px;text-align:center;
-    background:rgba(0,255,65,0.03);margin-top:20px;animation:fadeIn 0.5s ease;
-  }
-  .sentence-final{
-    font-family:'Orbitron',monospace;font-size:15px;font-weight:700;
-    color:#00ff41;letter-spacing:0.1em;line-height:1.6;
-    text-shadow:0 0 15px rgba(0,255,65,0.4);margin-bottom:12px;
-    border:1px solid rgba(0,255,65,0.3);padding:16px;
-  }
-  .final-note{font-size:12px;opacity:0.6;line-height:1.6;}
+  /* Final reveal — NO SUM, just letters + 3 blanks */
+  .final-reveal{display:none;border:1px solid #00ff41;padding:28px;text-align:center;background:rgba(0,255,65,0.03);margin-top:20px;animation:fadeIn 0.5s ease;}
+  .sentence-final{font-family:'Orbitron',monospace;font-size:15px;font-weight:700;color:#00ff41;letter-spacing:0.1em;line-height:1.6;text-shadow:0 0 15px rgba(0,255,65,0.4);margin-bottom:12px;border:1px solid rgba(0,255,65,0.3);padding:16px;}
+  .final-note{font-size:12px;opacity:0.7;line-height:1.9;}
+  .hint-box{margin:20px 0;border:1px solid rgba(0,255,65,0.3);padding:16px;background:rgba(0,255,65,0.02);}
+  .hint-label{font-size:11px;opacity:0.4;letter-spacing:0.15em;margin-bottom:10px;}
+  .blanks-row{display:flex;gap:10px;justify-content:center;margin-bottom:12px;}
+  .blank-box{border:1px solid rgba(0,255,65,0.4);width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:20px;font-weight:900;color:#00ff41;opacity:0.3;}
+  .hint-text{font-size:12px;opacity:0.6;line-height:1.7;}
+
+  .spotify-box{margin-top:20px;border:1px solid rgba(0,255,65,0.3);padding:20px;background:rgba(0,255,65,0.02);text-align:center;}
+  .spotify-label{font-size:11px;opacity:0.4;letter-spacing:0.15em;margin-bottom:10px;}
+  .spotify-link-btn{display:inline-block;margin-top:12px;padding:12px 24px;border:1px solid #00ff41;color:#00ff41;font-family:'Orbitron',monospace;font-size:12px;font-weight:700;letter-spacing:0.1em;cursor:pointer;text-decoration:none;background:transparent;transition:background 0.2s;}
+  .spotify-link-btn:hover{background:rgba(0,255,65,0.1);}
 
   .footer-bar{border:1px solid #00ff41;border-top:none;padding:6px 16px;font-size:10px;opacity:0.4;display:flex;justify-content:space-between;}
+  #cheatOverlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:9999;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:40px;}
+  #cheatOverlay.active{display:flex;}
+  .cheat-title{font-family:'Orbitron',monospace;font-size:36px;font-weight:900;color:#ff0000;text-shadow:0 0 30px #ff0000;letter-spacing:0.1em;animation:redpulse 0.8s step-end infinite;margin-bottom:16px;}
+  @keyframes redpulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+  .cheat-sub{font-size:13px;color:#ff6666;letter-spacing:0.15em;margin-bottom:32px;line-height:1.8;}
+  .cheat-penalty{font-family:'Orbitron',monospace;font-size:48px;font-weight:900;color:#ff4444;text-shadow:0 0 20px #ff4444;margin-bottom:8px;}
+  .cheat-penalty-label{font-size:11px;color:#ff6666;opacity:0.7;letter-spacing:0.2em;margin-bottom:32px;}
+  .cheat-log{font-size:11px;color:#ff4444;opacity:0.5;border:1px solid rgba(255,0,0,0.2);padding:12px 20px;margin-bottom:24px;letter-spacing:0.1em;}
+  .strike-bar{display:flex;gap:12px;margin-bottom:32px;}
+  .strike-dot{width:14px;height:14px;border:1px solid #ff4444;background:transparent;}
+  .strike-dot.active{background:#ff4444;box-shadow:0 0 10px #ff4444;}
+  .voice-status{font-size:11px;color:#ff4444;opacity:0.5;letter-spacing:0.15em;margin-top:8px;animation:blink 1.2s step-end infinite;display:none;}
+  #unlockBtn{margin-top:24px;padding:10px 28px;background:transparent;border:1px solid rgba(0,255,65,0.3);color:#00ff41;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:0.1em;cursor:pointer;opacity:0.5;}
+  #unlockBtn:hover{opacity:1;}
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="top-bar">
-    <span>PROJECT_001 // TRIAL_2</span>
-    <span class="blink">● PATTERN RECOGNITION: ACTIVE</span>
-  </div>
-  <div class="main-card">
-    <div class="corner tl"></div><div class="corner tr"></div>
-    <div class="corner bl"></div><div class="corner br"></div>
+<audio id="cheatAudio" preload="auto"><source src="audio/cheat.mp3" type="audio/mpeg"></audio>
 
+<div id="cheatOverlay">
+  <div class="cheat-title">⚠ CHEATER DETECTED</div>
+  <div class="cheat-sub">MR. WHATSIT SAW EVERYTHING.<br>TAB SWITCH / FOCUS LOSS LOGGED.</div>
+  <div class="strike-bar" id="strikeDots"></div>
+  <div class="cheat-penalty" id="penaltyCountdown">30</div>
+  <div class="cheat-penalty-label">SECONDS PENALTY REMAINING</div>
+  <div class="cheat-log" id="cheatLog">INFRACTION #1 — TIMESTAMP: --:--:--</div>
+  <div class="voice-status" id="voiceStatus">🔊 MR. WHATSIT IS SPEAKING...</div>
+  <button id="unlockBtn" onclick="dismissOverlay()">[ RETURN TO STATION — PENALTY CONTINUES ]</button>
+</div>
+
+<div class="container">
+  <div class="top-bar"><span>PROJECT_001 // TRIAL_2</span><span class="blink">● PATTERN RECOGNITION: ACTIVE</span></div>
+  <div class="main-card">
+    <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
     <div class="round-id">ROUND 02 // THE SILENT SCATTER</div>
     <div class="title">PATTERN<br>RECOGNITION</div>
     <div class="subtitle">
@@ -115,27 +109,22 @@
     <div class="divider"></div>
 
     <div class="dots" id="dotsRow">
-      <div class="dot active" id="dot0"></div>
-      <div class="dot" id="dot1"></div>
-      <div class="dot" id="dot2"></div>
-      <div class="dot" id="dot3"></div>
-      <div class="dot" id="dot4"></div>
-      <div class="dot" id="dot5"></div>
+      <div class="dot active" id="dot0"></div><div class="dot" id="dot1"></div>
+      <div class="dot" id="dot2"></div><div class="dot" id="dot3"></div>
+      <div class="dot" id="dot4"></div><div class="dot" id="dot5"></div>
     </div>
 
-    <!-- Sentence builder (always visible) -->
     <div class="sentence-builder">
       <div class="sb-label">// WORDS COLLECTED SO FAR</div>
       <div class="words-row">
-        <div class="word-chip" id="wc0">SEARCH</div>
-        <div class="word-chip" id="wc1">THE</div>
-        <div class="word-chip" id="wc2">HIDDEN</div>
-        <div class="word-chip" id="wc3">FREQUENCY</div>
-        <div class="word-chip" id="wc4">IN</div>
-        <div class="word-chip" id="wc5">MUSIC</div>
+        <div class="word-chip" id="wc0">_ _ _ _ _ _</div>
+        <div class="word-chip" id="wc1">_ _ _</div>
+        <div class="word-chip" id="wc2">_ _ _ _ _ _</div>
+        <div class="word-chip" id="wc3">_ _ _ _ _ _ _ _ _</div>
+        <div class="word-chip" id="wc4">_ _</div>
+        <div class="word-chip" id="wc5">_ _ _ _ _</div>
       </div>
     </div>
-
     <div class="divider"></div>
 
     <!-- Riddle 1 -->
@@ -148,7 +137,6 @@
       <div class="msg wrong" id="wrong0"></div>
       <div class="word-collected" id="wreveal0"><span style="font-size:11px;opacity:0.5;letter-spacing:0.12em;">WORD UNLOCKED → </span><span class="word-val">SEARCH</span></div>
     </div>
-
     <!-- Riddle 2 -->
     <div class="riddle-card" id="riddle1">
       <div class="riddle-num">// RIDDLE 02 OF 06</div>
@@ -159,7 +147,6 @@
       <div class="msg wrong" id="wrong1"></div>
       <div class="word-collected" id="wreveal1"><span style="font-size:11px;opacity:0.5;letter-spacing:0.12em;">WORD UNLOCKED → </span><span class="word-val">THE</span></div>
     </div>
-
     <!-- Riddle 3 -->
     <div class="riddle-card" id="riddle2">
       <div class="riddle-num">// RIDDLE 03 OF 06</div>
@@ -170,7 +157,6 @@
       <div class="msg wrong" id="wrong2"></div>
       <div class="word-collected" id="wreveal2"><span style="font-size:11px;opacity:0.5;letter-spacing:0.12em;">WORD UNLOCKED → </span><span class="word-val">HIDDEN</span></div>
     </div>
-
     <!-- Riddle 4 -->
     <div class="riddle-card" id="riddle3">
       <div class="riddle-num">// RIDDLE 04 OF 06</div>
@@ -181,7 +167,6 @@
       <div class="msg wrong" id="wrong3"></div>
       <div class="word-collected" id="wreveal3"><span style="font-size:11px;opacity:0.5;letter-spacing:0.12em;">WORD UNLOCKED → </span><span class="word-val">FREQUENCY</span></div>
     </div>
-
     <!-- Riddle 5 -->
     <div class="riddle-card" id="riddle4">
       <div class="riddle-num">// RIDDLE 05 OF 06</div>
@@ -192,7 +177,6 @@
       <div class="msg wrong" id="wrong4"></div>
       <div class="word-collected" id="wreveal4"><span style="font-size:11px;opacity:0.5;letter-spacing:0.12em;">WORD UNLOCKED → </span><span class="word-val">IN</span></div>
     </div>
-
     <!-- Riddle 6 -->
     <div class="riddle-card" id="riddle5">
       <div class="riddle-num">// RIDDLE 06 OF 06</div>
@@ -208,130 +192,135 @@
     <div class="final-reveal" id="finalReveal">
       <div style="font-size:11px;opacity:0.5;letter-spacing:0.15em;margin-bottom:16px;">PATTERN RECOGNITION: SATISFACTORY // LATERAL THINKING: CATALOGUED</div>
       <div class="sentence-final">SEARCH THE HIDDEN FREQUENCY IN MUSIC</div>
-      <div class="final-note">
-        This sentence is your clue for Round 3.<br>
-        You need to find something hidden in music.<br><br>
-        ▶ Open Spotify<br>
-        ▶ Search for playlist: <strong>"PROJECT 001: FREQUENCY LOG"</strong><br>
-        ▶ Decode the hidden message within
+
+      <!-- 3 blank spaces + hint -->
+      <div class="hint-box">
+        <div class="hint-label">// YOUR ROUND 3 PASSWORD — THINK. YOU GOT YOUR HINT IN THE PREVIOUS ROUNDS.</div>
+        <div class="blanks-row">
+          <div class="blank-box">_</div>
+          <div class="blank-box">_</div>
+          <div class="blank-box">_</div>
+        </div>
+        <div class="hint-text">
+          Three letters. One number you collected.<br>
+          Combine what the stations gave you.<br>
+          <span style="opacity:0.5;">You already have everything you need.</span>
+        </div>
+      </div>
+
+      <!-- Spotify instruction -->
+      <div class="spotify-box">
+        <div class="spotify-label">// ROUND 3 — YOUR NEXT DESTINATION</div>
+        <div class="final-note">
+          The sentence above is your clue.<br>
+          Search for the hidden frequency in music.<br><br>
+          ▶ Go to the <strong>Google Site</strong> provided by the organiser<br>
+          ▶ Find the Spotify link on that page<br>
+          ▶ Search for playlist: <strong>"PROJECT 001: FREQUENCY LOG"</strong><br>
+          ▶ Decode the hidden message within the playlist
+        </div>
+        <a class="spotify-link-btn" href="https://YOUR-GOOGLE-SITE-URL-HERE" target="_blank">▶ OPEN GOOGLE SITE</a>
       </div>
     </div>
 
   </div>
-  <div class="footer-bar">
-    <span>LATERAL THINKING: BEING CATALOGUED</span>
-    <span id="clockDisplay"></span>
-  </div>
+  <div class="footer-bar"><span>LATERAL THINKING: BEING CATALOGUED</span><span id="clockDisplay"></span></div>
 </div>
+
 <script>
-  const RIDDLES = [
-    { answers: ["cloud"], word: "SEARCH" },
-    { answers: ["breath", "breathe"], word: "THE" },
-    { answers: ["map", "a map"], word: "HIDDEN" },
-    { answers: ["footsteps", "foot steps"], word: "FREQUENCY" },
-    { answers: ["clock", "a clock"], word: "IN" },
-    { answers: ["pencil lead", "graphite", "pencil", "lead"], word: "MUSIC" },
+  const RIDDLES=[
+    {answers:["cloud"],word:"SEARCH"},
+    {answers:["breath","breathe"],word:"THE"},
+    {answers:["map","a map"],word:"HIDDEN"},
+    {answers:["footsteps","foot steps"],word:"FREQUENCY"},
+    {answers:["clock","a clock"],word:"IN"},
+    {answers:["pencil lead","graphite","pencil","lead"],word:"MUSIC"},
   ];
 
-  let currentRiddle = 0;
-  let riddleAttempts = [0,0,0,0,0,0];
+  let currentRiddle=0,riddleAttempts=[0,0,0,0,0,0],allDone=false;
+  const PENALTY_SECONDS=30,MAX_STRIKES=3;
+  let strikes=0,penaltyTimer=null,penaltyRemaining=0,isInPenalty=false,overlayVisible=false,lastCheatTime=0;
 
-  // 🔥 AUDIO SETUP
-  let introPlayed = false;
-  const introAudio = new Audio("round2-intro.mp3");
-  const completionAudio = new Audio("round2-completion.mp3");
+  function updateClock(){document.getElementById("clockDisplay").textContent=new Date().toTimeString().slice(0,8);}
+  setInterval(updateClock,1000);updateClock();
 
-  function playIntro(){
-    if(!introPlayed){
-      introAudio.currentTime = 0;
-      introAudio.play().catch(()=>{});
-      introPlayed = true;
-    }
-  }
+  const sdEl=document.getElementById("strikeDots");
+  for(let i=0;i<MAX_STRIKES;i++){const d=document.createElement("div");d.className="strike-dot";d.id="dot-"+i;sdEl.appendChild(d);}
 
-  function updateClock(){
-    document.getElementById("clockDisplay").textContent =
-      new Date().toTimeString().slice(0,8);
-  }
-  setInterval(updateClock,1000);
-  updateClock();
-
-  // 🔥 USER INTERACTION TRIGGER (IMPORTANT)
-  document.addEventListener("keydown", function(){
-    playIntro();
-  }, { once: true });
-
-  // Enter key listeners
   for(let i=0;i<6;i++){
-    document.getElementById("inp"+i).addEventListener("keydown",((idx)=>(e)=>{
-      if(e.key==="Enter") check(idx);
-    })(i));
+    document.getElementById("inp"+i).addEventListener("keydown",((idx)=>(e)=>{if(e.key==="Enter")check(idx);})(i));
   }
 
-  const wrongMsgs = [
-    "✗ INCORRECT. MR. WHATSIT NOTES YOUR FAILURE. THINK DIFFERENTLY.",
-    "✗ WRONG. RECONSIDER THE RIDDLE'S MEANING.",
-    "✗ NEGATIVE. YOU'RE THINKING TOO LITERALLY.",
-    "✗ ERROR. THE ANSWER IS SIMPLER THAN YOU THINK.",
-  ];
+  const cheatPhrases=["Cheating detected. Mr. Whatsit is watching you. Thirty second penalty applied.","You switched tabs. That was a mistake. Mr. Whatsit sees everything.","Nice try. Cheating logged. Thirty seconds added to your suffering."];
+
+  function playCheatAudio(){
+    const a=document.getElementById("cheatAudio");
+    if(a&&a.readyState>=2){a.currentTime=0;a.play().catch(()=>speakFallback());document.getElementById("voiceStatus").style.display="block";a.onended=()=>{document.getElementById("voiceStatus").style.display="none";};}
+    else speakFallback();
+  }
+  function speakFallback(){
+    if(!window.speechSynthesis)return;window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(cheatPhrases[Math.min(strikes-1,cheatPhrases.length-1)]);
+    u.rate=0.85;u.pitch=0.6;u.volume=1;
+    const vs=window.speechSynthesis.getVoices();
+    const pv=vs.find(v=>v.lang==="en-GB"||v.name.toLowerCase().includes("daniel"));if(pv)u.voice=pv;
+    u.onstart=()=>{document.getElementById("voiceStatus").style.display="block";};
+    u.onend=()=>{document.getElementById("voiceStatus").style.display="none";};
+    window.speechSynthesis.speak(u);
+  }
+  if(window.speechSynthesis){window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();}
+
+  function triggerCheat(){
+    if(allDone)return;
+    const now=Date.now();if(now-lastCheatTime<2000)return;lastCheatTime=now;
+    strikes++;
+    for(let i=0;i<MAX_STRIKES;i++){if(i<strikes)document.getElementById("dot-"+i).classList.add("active");}
+    document.getElementById("cheatLog").textContent=`INFRACTION #${strikes} — TIMESTAMP: ${new Date().toTimeString().slice(0,8)}`;
+    playCheatAudio();
+    isInPenalty=true;overlayVisible=true;penaltyRemaining=PENALTY_SECONDS;
+    document.getElementById("penaltyCountdown").textContent=penaltyRemaining;
+    document.getElementById("cheatOverlay").classList.add("active");
+    const ci=document.getElementById("inp"+currentRiddle);if(ci)ci.disabled=true;
+    clearInterval(penaltyTimer);
+    penaltyTimer=setInterval(()=>{penaltyRemaining--;document.getElementById("penaltyCountdown").textContent=penaltyRemaining;if(penaltyRemaining<=0){clearInterval(penaltyTimer);isInPenalty=false;if(overlayVisible)dismissOverlay();const ci2=document.getElementById("inp"+currentRiddle);if(ci2&&!allDone){ci2.disabled=false;ci2.focus();}}},1000);
+  }
+  function dismissOverlay(){document.getElementById("cheatOverlay").classList.remove("active");overlayVisible=false;}
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)triggerCheat();});
+  window.addEventListener("blur",()=>triggerCheat());
+
+  const wrongMsgs=["✗ INCORRECT. MR. WHATSIT NOTES YOUR FAILURE. THINK DIFFERENTLY.","✗ WRONG. RECONSIDER THE RIDDLE'S MEANING.","✗ NEGATIVE. YOU'RE THINKING TOO LITERALLY.","✗ ERROR. THE ANSWER IS SIMPLER THAN YOU THINK."];
 
   function check(idx){
-    if(idx !== currentRiddle) return;
-
-    const input = document.getElementById("inp"+idx);
-    const val = input.value.trim().toLowerCase();
-    if(!val) return;
-
-    const wrongMsg = document.getElementById("wrong"+idx);
-    wrongMsg.style.display = "none";
-
+    if(idx!==currentRiddle||isInPenalty)return;
+    const input=document.getElementById("inp"+idx);
+    const val=input.value.trim().toLowerCase();if(!val)return;
+    const wrongMsg=document.getElementById("wrong"+idx);wrongMsg.style.display="none";
     if(RIDDLES[idx].answers.includes(val)){
-
-      input.disabled = true;
-
-      document.getElementById("wreveal"+idx).style.display = "block";
+      input.disabled=true;
+      document.getElementById("wreveal"+idx).style.display="block";
       document.getElementById("dot"+idx).classList.remove("active");
       document.getElementById("dot"+idx).classList.add("done");
-      document.getElementById("wc"+idx).classList.add("revealed");
-
+      const chip=document.getElementById("wc"+idx);
+      chip.textContent=RIDDLES[idx].word;chip.classList.add("revealed");
       setTimeout(()=>{
-        if(idx < 5){
-
+        if(idx<5){
           document.getElementById("riddle"+idx).classList.remove("active");
           currentRiddle++;
-
           document.getElementById("riddle"+currentRiddle).classList.add("active");
           document.getElementById("dot"+currentRiddle).classList.add("active");
-
           document.getElementById("inp"+currentRiddle).focus();
-
-        } else {
-
-          // 🔥 FINAL COMPLETION AUDIO
-          completionAudio.currentTime = 0;
-          completionAudio.play().catch(()=>{});
-
+        }else{
+          allDone=true;
           document.getElementById("riddle5").classList.remove("active");
-          document.getElementById("finalReveal").style.display = "block";
+          document.getElementById("finalReveal").style.display="block";
         }
-      }, 1400);
-
-    } else {
-
+      },1400);
+    }else{
       riddleAttempts[idx]++;
-
-      input.classList.remove("shake");
-      void input.offsetWidth;
-      input.classList.add("shake");
-
-      input.value = "";
-
-      wrongMsg.textContent =
-        wrongMsgs[Math.min(riddleAttempts[idx]-1, wrongMsgs.length-1)];
-
-      wrongMsg.style.display = "block";
-
-      setTimeout(()=>{ wrongMsg.style.display="none"; }, 3000);
+      input.classList.remove("shake");void input.offsetWidth;input.classList.add("shake");input.value="";
+      wrongMsg.textContent=wrongMsgs[Math.min(riddleAttempts[idx]-1,wrongMsgs.length-1)];
+      wrongMsg.style.display="block";
+      setTimeout(()=>{wrongMsg.style.display="none";},3000);
     }
   }
 </script>

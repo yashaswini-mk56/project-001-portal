@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PROJECT 001 — QR Generator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#000;color:#00ff41;font-family:'Share Tech Mono',monospace;min-height:100vh;padding:32px 20px;overflow-x:hidden;}
+  body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,0.03) 2px,rgba(0,255,65,0.03) 4px);pointer-events:none;z-index:0;}
+  .container{max-width:900px;margin:0 auto;position:relative;z-index:1;}
+
+  .top-bar{border:1px solid #00ff41;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;font-size:11px;opacity:0.7;}
+  .blink{animation:blink 1s step-end infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+  .header{border:1px solid #00ff41;padding:32px;background:rgba(0,255,65,0.02);margin-bottom:2px;text-align:center;}
+  .header-title{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;color:#00ff41;text-shadow:0 0 30px rgba(0,255,65,0.5);margin-bottom:8px;}
+  .header-sub{font-size:12px;opacity:0.5;letter-spacing:0.1em;line-height:1.7;}
+
+  .instruction-box{border:1px solid rgba(0,255,65,0.3);padding:16px 20px;background:rgba(0,255,65,0.02);margin-bottom:20px;font-size:12px;line-height:1.8;opacity:0.8;}
+
+  .url-input-section{border:1px solid rgba(0,255,65,0.3);padding:20px;background:rgba(0,255,65,0.02);margin-bottom:24px;}
+  .url-label{font-size:11px;opacity:0.5;letter-spacing:0.15em;margin-bottom:8px;}
+  .url-input{width:100%;padding:12px 14px;background:rgba(0,255,65,0.05);border:1px solid #00ff41;color:#00ff41;font-family:'Share Tech Mono',monospace;font-size:13px;outline:none;margin-bottom:10px;}
+  .url-input:focus{box-shadow:0 0 10px rgba(0,255,65,0.2);}
+  .url-note{font-size:11px;opacity:0.4;line-height:1.6;}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:24px;}
+
+  .qr-card{border:1px solid rgba(0,255,65,0.3);background:rgba(0,255,65,0.02);padding:24px;text-align:center;position:relative;}
+  .qr-card-title{font-family:'Orbitron',monospace;font-size:13px;font-weight:700;margin-bottom:4px;color:#00ff41;}
+  .qr-card-sub{font-size:11px;opacity:0.5;margin-bottom:16px;letter-spacing:0.08em;}
+  .qr-box{width:180px;height:180px;margin:0 auto 16px;border:1px solid rgba(0,255,65,0.3);background:white;display:flex;align-items:center;justify-content:center;padding:8px;}
+  .qr-box img{width:100%;height:100%;display:block;}
+  .qr-url{font-size:10px;opacity:0.4;word-break:break-all;margin-bottom:12px;line-height:1.5;min-height:32px;}
+  .btn-small{padding:8px 14px;background:transparent;border:1px solid rgba(0,255,65,0.4);color:#00ff41;font-family:'Share Tech Mono',monospace;font-size:11px;cursor:pointer;transition:background 0.2s;width:100%;}
+  .btn-small:hover{background:rgba(0,255,65,0.1);}
+
+  .status-badge{
+    display:inline-block;padding:3px 10px;border-radius:2px;
+    font-size:10px;font-weight:700;letter-spacing:0.1em;
+    margin-bottom:8px;
+  }
+  .badge-r1{background:rgba(255,100,0,0.15);border:1px solid rgba(255,100,0,0.4);color:#ff9944;}
+  .badge-r2{background:rgba(0,100,255,0.15);border:1px solid rgba(0,100,255,0.4);color:#4499ff;}
+  .badge-r3{background:rgba(255,0,150,0.15);border:1px solid rgba(255,0,150,0.4);color:#ff44aa;}
+
+  .print-btn{
+    width:100%;padding:16px;background:transparent;border:1px solid #00ff41;
+    color:#00ff41;font-family:'Orbitron',monospace;font-size:14px;font-weight:700;
+    letter-spacing:0.15em;cursor:pointer;transition:background 0.2s,box-shadow 0.2s;
+    margin-bottom:8px;
+  }
+  .print-btn:hover{background:rgba(0,255,65,0.1);box-shadow:0 0 20px rgba(0,255,65,0.3);}
+
+  .divider{border:none;border-top:1px solid rgba(0,255,65,0.15);margin:24px 0;}
+  .footer-bar{border:1px solid #00ff41;border-top:none;padding:6px 16px;font-size:10px;opacity:0.4;display:flex;justify-content:space-between;}
+
+  @media print{
+    body{background:white;color:black;padding:10px;}
+    .print-btn,.top-bar,.footer-bar,.url-input-section,.instruction-box{display:none;}
+    .qr-card{border-color:#ccc;break-inside:avoid;}
+    .qr-card-title,.qr-card-sub,.qr-url{color:black;}
+    .status-badge{color:black;background:#eee;border-color:#ccc;}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="top-bar">
+    <span>PROJECT_001 // QR GENERATOR — ADMIN PANEL</span>
+    <span class="blink">● ORGANISER ACCESS</span>
+  </div>
+  <div class="header">
+    <div class="header-title">QR CODE HUB</div>
+    <div class="header-sub">
+      Enter your hosting URL below, then print QR codes for all stations.<br>
+      Each card can be printed and placed at the physical station location.
+    </div>
+  </div>
+
+  <div style="border:1px solid #00ff41;border-top:none;padding:24px;background:rgba(0,255,65,0.01);margin-bottom:2px;">
+    <div class="instruction-box">
+      ▶ HOST YOUR HTML FILES on GitHub Pages, Netlify, or any free host<br>
+      ▶ PASTE THE BASE URL below (e.g. https://yourname.github.io/project001/)<br>
+      ▶ QR CODES will auto-generate for all stations<br>
+      ▶ PRINT THIS PAGE and cut out each QR card for each station
+    </div>
+
+    <div class="url-input-section">
+      <div class="url-label">// YOUR HOSTING BASE URL</div>
+      <input class="url-input" id="baseUrl" type="text" placeholder="https://yourname.github.io/project001/" oninput="updateAll()"/>
+      <div class="url-note">
+        Files to upload: station1-plank.html · station2-pushup.html · station3-balance.html · round2-silent-scatter.html<br>
+        If testing locally, use the full file path or localhost URL.
+      </div>
+    </div>
+
+    <div class="grid" id="qrGrid">
+      <!-- Cards generated by JS -->
+    </div>
+
+    <button class="print-btn" onclick="window.print()">🖨 PRINT ALL QR CODES</button>
+  </div>
+
+  <div class="footer-bar">
+    <span>ADMIN PANEL — NOT FOR PARTICIPANTS</span>
+    <span id="clockDisplay"></span>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  const STATIONS = [
+    { id:"s1", badge:"badge-r1", badgeText:"ROUND 1", title:"Station 1 — The Plank Protocol", sub:"Physical + riddle under stress", file:"station1-plank.html" },
+    { id:"s2", badge:"badge-r1", badgeText:"ROUND 1", title:"Station 2 — Pushup Mathematics", sub:"20 pushups + 4 math problems", file:"station2-pushup.html" },
+    { id:"s3", badge:"badge-r1", badgeText:"ROUND 1", title:"Station 3 — Balance & Logic", sub:"Single-leg balance + logic puzzle", file:"station3-balance.html" },
+    { id:"s4", badge:"badge-r2", badgeText:"ROUND 2", title:"Round 2 — The Silent Scatter", sub:"6 riddles → secret sentence", file:"round2-silent-scatter.html" },
+  ];
+
+  let qrInstances = {};
+
+  function updateClock(){
+    document.getElementById("clockDisplay").textContent = new Date().toTimeString().slice(0,8);
+  }
+  setInterval(updateClock,1000); updateClock();
+
+  function buildGrid(){
+    const grid = document.getElementById("qrGrid");
+    grid.innerHTML = "";
+    STATIONS.forEach(s=>{
+      const card = document.createElement("div");
+      card.className = "qr-card";
+      card.innerHTML = `
+        <span class="status-badge ${s.badge}">${s.badgeText}</span>
+        <div class="qr-card-title">${s.title}</div>
+        <div class="qr-card-sub">${s.sub}</div>
+        <div class="qr-box" id="qrbox-${s.id}"></div>
+        <div class="qr-url" id="qrurl-${s.id}">Enter base URL above to generate QR</div>
+        <button class="btn-small" onclick="copyUrl('${s.id}')">COPY LINK</button>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function updateAll(){
+    let base = document.getElementById("baseUrl").value.trim();
+    if(base && !base.endsWith("/")) base += "/";
+
+    STATIONS.forEach((s,i)=>{
+      const url = base ? base + s.file : "";
+      const urlEl = document.getElementById("qrurl-"+s.id);
+      const boxEl = document.getElementById("qrbox-"+s.id);
+
+      urlEl.textContent = url || "Enter base URL above to generate QR";
+      boxEl.innerHTML = "";
+
+      if(url){
+        try{
+          new QRCode(boxEl, {
+            text: url,
+            width: 164,
+            height: 164,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+          });
+        } catch(e){ boxEl.innerHTML = '<div style="color:#ff4444;font-size:11px;padding:8px;">QR Error</div>'; }
+      }
+    });
+  }
+
+  function copyUrl(id){
+    const url = document.getElementById("qrurl-"+id).textContent;
+    if(!url || url.includes("Enter base")) return;
+    navigator.clipboard.writeText(url).then(()=>{
+      const btn = event.target;
+      btn.textContent = "COPIED ✓";
+      setTimeout(()=>{ btn.textContent = "COPY LINK"; }, 2000);
+    });
+  }
+
+  buildGrid();
+</script>
+</body>
+</html>

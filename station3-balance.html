@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PROJECT 001 — Station 3</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#000;color:#00ff41;font-family:'Share Tech Mono',monospace;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;overflow-x:hidden;}
+  body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,0.03) 2px,rgba(0,255,65,0.03) 4px);pointer-events:none;z-index:0;}
+  .container{max-width:560px;width:100%;position:relative;z-index:1;}
+  .top-bar{border:1px solid #00ff41;padding:8px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;font-size:11px;opacity:0.7;}
+  .blink{animation:blink 1s step-end infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+  .main-card{border:1px solid #00ff41;padding:36px 32px;background:rgba(0,255,65,0.03);position:relative;}
+  .corner{position:absolute;width:12px;height:12px;border-color:#00ff41;border-style:solid;}
+  .corner.tl{top:-1px;left:-1px;border-width:2px 0 0 2px;} .corner.tr{top:-1px;right:-1px;border-width:2px 2px 0 0;}
+  .corner.bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px;} .corner.br{bottom:-1px;right:-1px;border-width:0 2px 2px 0;}
+  .station-id{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;color:#00ff41;opacity:0.5;letter-spacing:0.2em;margin-bottom:16px;}
+  .title{font-family:'Orbitron',monospace;font-size:22px;font-weight:900;color:#00ff41;line-height:1.2;margin-bottom:8px;text-shadow:0 0 20px rgba(0,255,65,0.5);}
+  .subtitle{font-size:12px;opacity:0.5;margin-bottom:28px;letter-spacing:0.1em;}
+  .divider{border:none;border-top:1px solid rgba(0,255,65,0.2);margin:24px 0;}
+  .warning-box{border:1px solid #ff4444;padding:14px 16px;background:rgba(255,0,0,0.05);font-size:12px;color:#ff6666;margin-bottom:20px;line-height:1.6;animation:pulseRed 2s ease-in-out infinite;}
+  @keyframes pulseRed{0%,100%{border-color:#ff4444;}50%{border-color:#ff0000;box-shadow:0 0 10px rgba(255,0,0,0.2);}}
+  .puzzle-box{border:1px solid rgba(0,255,65,0.4);padding:24px;background:rgba(0,255,65,0.03);margin-bottom:24px;font-size:14px;line-height:1.8;}
+  .puzzle-title{font-family:'Orbitron',monospace;font-size:12px;opacity:0.5;letter-spacing:0.15em;margin-bottom:12px;}
+  .options{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+  .option{border:1px solid rgba(0,255,65,0.3);padding:14px 16px;cursor:pointer;font-size:13px;line-height:1.5;transition:background 0.2s,border-color 0.2s;background:rgba(0,255,65,0.02);}
+  .option:hover{background:rgba(0,255,65,0.08);border-color:#00ff41;}
+  .option.selected{border-color:#00ff41;background:rgba(0,255,65,0.1);}
+  .option.wrong-ans{border-color:#ff4444;background:rgba(255,0,0,0.05);color:#ff6666;}
+  .option.correct-ans{border-color:#00ff41;background:rgba(0,255,65,0.15);box-shadow:0 0 10px rgba(0,255,65,0.2);}
+  .option-label{color:#00ff41;opacity:0.5;margin-right:8px;}
+  .btn{width:100%;padding:14px;background:transparent;border:1px solid #00ff41;color:#00ff41;font-family:'Orbitron',monospace;font-size:13px;font-weight:700;letter-spacing:0.15em;cursor:pointer;transition:background 0.2s,box-shadow 0.2s;}
+  .btn:hover{background:rgba(0,255,65,0.1);box-shadow:0 0 20px rgba(0,255,65,0.3);}
+  .btn:disabled{opacity:0.3;cursor:not-allowed;}
+  .msg{padding:14px;font-size:12px;margin-top:12px;display:none;line-height:1.5;}
+  .msg.wrong{border:1px solid #ff4444;color:#ff6666;background:rgba(255,0,0,0.05);}
+  .code-reveal{display:none;text-align:center;padding:28px;border:1px solid #00ff41;background:rgba(0,255,65,0.05);margin-top:20px;animation:fadeIn 0.5s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .code-letter{font-family:'Orbitron',monospace;font-size:64px;font-weight:900;color:#00ff41;text-shadow:0 0 30px #00ff41,0 0 60px rgba(0,255,65,0.5);line-height:1;margin:12px 0;}
+  .code-note{font-size:12px;opacity:0.6;margin-top:8px;}
+  .password-section{margin-top:20px;border:1px solid rgba(0,255,65,0.2);padding:20px;background:rgba(0,255,65,0.02);display:none;}
+  .pw-label{font-size:11px;opacity:0.5;letter-spacing:0.15em;margin-bottom:12px;}
+  .letters-display{display:flex;gap:8px;justify-content:center;margin-bottom:16px;}
+  .letter-box{border:1px solid #00ff41;width:52px;height:52px;display:flex;align-items:center;justify-content:center;font-family:'Orbitron',monospace;font-size:24px;font-weight:900;background:rgba(0,255,65,0.05);text-shadow:0 0 10px rgba(0,255,65,0.5);}
+  .pw-note{font-size:12px;opacity:0.5;line-height:1.6;}
+
+  /* Portal entry */
+  .portal-section{margin-top:20px;border:1px solid rgba(0,255,65,0.3);padding:24px;background:rgba(0,255,65,0.02);display:none;}
+  .portal-label{font-size:11px;opacity:0.6;letter-spacing:0.15em;margin-bottom:8px;}
+  .tries-left{font-size:12px;color:#ff9900;letter-spacing:0.1em;margin-bottom:12px;border:1px solid rgba(255,153,0,0.3);padding:8px 12px;background:rgba(255,153,0,0.05);}
+  input[type=text]{width:100%;padding:14px 16px;background:rgba(0,255,65,0.05);border:1px solid #00ff41;color:#00ff41;font-family:'Share Tech Mono',monospace;font-size:18px;outline:none;margin-bottom:12px;letter-spacing:0.2em;text-transform:uppercase;text-align:center;transition:box-shadow 0.2s;}
+  input[type=text]:focus{box-shadow:0 0 15px rgba(0,255,65,0.3);}
+  input.shake{animation:shake 0.4s ease;}
+  @keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-5px);}80%{transform:translateX(5px);}}
+
+  /* ELIMINATED SCREEN */
+  #eliminatedScreen{display:none;text-align:center;padding:32px;border:1px solid #ff0000;background:rgba(255,0,0,0.05);margin-top:20px;animation:fadeIn 0.5s ease;}
+  .elim-title{font-family:'Orbitron',monospace;font-size:28px;font-weight:900;color:#ff0000;text-shadow:0 0 30px #ff0000;letter-spacing:0.1em;margin-bottom:16px;animation:redpulse 0.8s step-end infinite;}
+  @keyframes redpulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+  .elim-sub{font-size:13px;color:#ff6666;line-height:1.8;letter-spacing:0.1em;}
+
+  .footer-bar{border:1px solid #00ff41;border-top:none;padding:6px 16px;font-size:10px;opacity:0.4;display:flex;justify-content:space-between;}
+  #cheatOverlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:9999;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:40px;}
+  #cheatOverlay.active{display:flex;}
+  .cheat-title-c{font-family:'Orbitron',monospace;font-size:36px;font-weight:900;color:#ff0000;text-shadow:0 0 30px #ff0000;letter-spacing:0.1em;animation:redpulse 0.8s step-end infinite;margin-bottom:16px;}
+  .cheat-sub-c{font-size:13px;color:#ff6666;letter-spacing:0.15em;margin-bottom:32px;line-height:1.8;}
+  .cheat-penalty{font-family:'Orbitron',monospace;font-size:48px;font-weight:900;color:#ff4444;text-shadow:0 0 20px #ff4444;margin-bottom:8px;}
+  .cheat-penalty-label{font-size:11px;color:#ff6666;opacity:0.7;letter-spacing:0.2em;margin-bottom:32px;}
+  .cheat-log{font-size:11px;color:#ff4444;opacity:0.5;border:1px solid rgba(255,0,0,0.2);padding:12px 20px;margin-bottom:24px;letter-spacing:0.1em;}
+  .strike-bar{display:flex;gap:12px;margin-bottom:32px;}
+  .strike-dot{width:14px;height:14px;border:1px solid #ff4444;background:transparent;}
+  .strike-dot.active{background:#ff4444;box-shadow:0 0 10px #ff4444;}
+  .voice-status{font-size:11px;color:#ff4444;opacity:0.5;letter-spacing:0.15em;margin-top:8px;animation:blink 1.2s step-end infinite;display:none;}
+  #unlockBtn{margin-top:24px;padding:10px 28px;background:transparent;border:1px solid rgba(0,255,65,0.3);color:#00ff41;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:0.1em;cursor:pointer;opacity:0.5;}
+  #unlockBtn:hover{opacity:1;}
+</style>
+</head>
+<body>
+<audio id="cheatAudio" preload="auto"><source src="audio/cheat.mp3" type="audio/mpeg"></audio>
+
+<div id="cheatOverlay">
+  <div class="cheat-title-c">⚠ CHEATER DETECTED</div>
+  <div class="cheat-sub-c">MR. WHATSIT SAW EVERYTHING.<br>TAB SWITCH / FOCUS LOSS LOGGED.</div>
+  <div class="strike-bar" id="strikeDots"></div>
+  <div class="cheat-penalty" id="penaltyCountdown">30</div>
+  <div class="cheat-penalty-label">SECONDS PENALTY REMAINING</div>
+  <div class="cheat-log" id="cheatLog">INFRACTION #1 — TIMESTAMP: --:--:--</div>
+  <div class="voice-status" id="voiceStatus">🔊 MR. WHATSIT IS SPEAKING...</div>
+  <button id="unlockBtn" onclick="dismissOverlay()">[ RETURN TO STATION — PENALTY CONTINUES ]</button>
+</div>
+
+<div class="container">
+  <div class="top-bar"><span>PROJECT_001 // TRIAL_1</span><span class="blink">● MONITORING ACTIVE</span></div>
+  <div class="main-card">
+    <div class="corner tl"></div><div class="corner tr"></div><div class="corner bl"></div><div class="corner br"></div>
+    <div class="station-id">STATION 03 // PROBLEM-SOLVING UNDER INSTABILITY</div>
+    <div class="title">BALANCE &<br>LOGIC</div>
+    <div class="subtitle">MR. WHATSIT OBSERVES YOUR INSTABILITY.</div>
+    <div class="divider"></div>
+    <div class="warning-box">
+      ⚠ MAINTAIN SINGLE-LEG BALANCE<br>
+      IF YOU FALL — RESTART FROM BEGINNING<br>
+      <span style="font-size:11px;opacity:0.7;">Instability data is being measured and logged</span>
+    </div>
+    <div class="puzzle-box">
+      <div class="puzzle-title">// LOGIC PUZZLE — SOLVE WHILE BALANCED</div>
+      A farmer has a <strong>fox</strong>, a <strong>chicken</strong>, and a bag of <strong>grain</strong>.<br><br>
+      He must cross a river. His boat holds only him and <strong>one item</strong> at a time.<br><br>
+      If left alone: <span style="color:#ff9900;">fox eats chicken</span> · <span style="color:#ff9900;">chicken eats grain</span><br><br>
+      <strong>What does he take on the FIRST crossing?</strong>
+    </div>
+    <div class="options" id="optionsGroup">
+      <div class="option" id="opt-a" onclick="selectOption('a')"><span class="option-label">[A]</span> The fox</div>
+      <div class="option" id="opt-b" onclick="selectOption('b')"><span class="option-label">[B]</span> The chicken</div>
+      <div class="option" id="opt-c" onclick="selectOption('c')"><span class="option-label">[C]</span> The grain</div>
+      <div class="option" id="opt-d" onclick="selectOption('d')"><span class="option-label">[D]</span> Nothing — take them all at once</div>
+    </div>
+    <button class="btn" id="submitBtn" onclick="checkAnswer()" disabled>▶ SUBMIT WHILE BALANCED</button>
+    <div class="msg wrong" id="wrongMsg"></div>
+    <div class="code-reveal" id="codeReveal">
+      <div style="font-size:11px;opacity:0.5;letter-spacing:0.15em;margin-bottom:4px;">PROBLEM-SOLVING UNDER INSTABILITY: OBSERVED</div>
+      <div style="font-size:11px;opacity:0.5;letter-spacing:0.15em;margin-bottom:4px;">BALANCE MAINTAINED: CONFIRMED</div>
+      <div class="code-letter">E</div>
+      <div style="font-size:11px;opacity:0.5;letter-spacing:0.15em;">YOUR CODE LETTER</div>
+      <div class="code-note">All three letters collected. Proceed to Round 2.</div>
+    </div>
+
+    <!-- Password section after puzzle solved -->
+    <div class="password-section" id="passwordSection">
+      <div class="pw-label">// YOUR COLLECTED CODE LETTERS</div>
+      <div class="letters-display">
+        <div class="letter-box">T</div>
+        <div class="letter-box">H</div>
+        <div class="letter-box">E</div>
+      </div>
+      <div class="pw-note">
+        You have your 3 letters from the stations.<br>
+        You also collected a number from Station 2.<br>
+        Combine them to form your portal password.<br><br>
+        ▶ Enter your password below to unlock Round 2.
+      </div>
+    </div>
+
+    <!-- Portal entry — 2 tries only -->
+    <div class="portal-section" id="portalSection">
+      <div class="portal-label">// ENTER PORTAL PASSWORD</div>
+      <div class="tries-left" id="triesLeft">⚠ WARNING: YOU HAVE 2 ATTEMPTS. FAIL BOTH AND YOU ARE ELIMINATED.</div>
+      <input type="text" id="portalInput" placeholder="_ _ _ _ _ _" maxlength="10" autocomplete="off" autocorrect="off" spellcheck="false"/>
+      <button class="btn" id="portalBtn" onclick="checkPortal()">▶ SUBMIT PASSWORD</button>
+      <div class="msg wrong" id="portalWrongMsg"></div>
+    </div>
+
+    <!-- Eliminated screen -->
+    <div id="eliminatedScreen">
+      <div class="elim-title">✗ ELIMINATED</div>
+      <div class="elim-sub">
+        YOU HAVE FAILED TO ENTER THE CORRECT PASSWORD.<br><br>
+        MR. WHATSIT HAS LOGGED YOUR ELIMINATION.<br>
+        YOUR PARTICIPATION IN THIS ROUND IS OVER.<br><br>
+        <span style="opacity:0.5;">Please see the event organiser.</span>
+      </div>
+    </div>
+
+    <!-- Round 2 unlock -->
+    <div id="round2Unlock" style="display:none;margin-top:20px;border:1px solid #00ff41;padding:28px;text-align:center;background:rgba(0,255,65,0.03);animation:fadeIn 0.5s ease;">
+      <div style="font-size:11px;opacity:0.5;letter-spacing:0.15em;margin-bottom:12px;">PASSWORD ACCEPTED // ACCESS GRANTED</div>
+      <div style="font-family:'Orbitron',monospace;font-size:20px;font-weight:900;color:#00ff41;text-shadow:0 0 20px #00ff41;margin-bottom:16px;">ROUND 2 UNLOCKED</div>
+      <div style="font-size:13px;opacity:0.7;line-height:1.8;margin-bottom:20px;">
+        Proceed to Round 2 — The Silent Scatter.<br>Scan the QR code at the Round 2 station.
+      </div>
+    </div>
+
+  </div>
+  <div class="footer-bar"><span>PARTICIPANT DATA: BEING COLLECTED</span><span id="clockDisplay"></span></div>
+</div>
+
+<script>
+  let selected=null,attempts=0,puzzleSolved=false;
+  let portalAttempts=0,portalSolved=false;
+  const CORRECT_OPTION="b";
+  const CORRECT_PASSWORD="THE229";
+  const PENALTY_SECONDS=30,MAX_STRIKES=3;
+  let strikes=0,penaltyTimer=null,penaltyRemaining=0,isInPenalty=false,overlayVisible=false,lastCheatTime=0,allDone=false;
+
+  function updateClock(){document.getElementById("clockDisplay").textContent=new Date().toTimeString().slice(0,8);}
+  setInterval(updateClock,1000);updateClock();
+
+  const sdEl=document.getElementById("strikeDots");
+  for(let i=0;i<MAX_STRIKES;i++){const d=document.createElement("div");d.className="strike-dot";d.id="dot-"+i;sdEl.appendChild(d);}
+
+  const cheatPhrases=["Cheating detected. Mr. Whatsit is watching you. Thirty second penalty applied.","You switched tabs. That was a mistake. Mr. Whatsit sees everything.","Nice try. Cheating logged. Thirty seconds added to your suffering."];
+
+  function playCheatAudio(){
+    const a=document.getElementById("cheatAudio");
+    if(a&&a.readyState>=2){a.currentTime=0;a.play().catch(()=>speakFallback());document.getElementById("voiceStatus").style.display="block";a.onended=()=>{document.getElementById("voiceStatus").style.display="none";};}
+    else speakFallback();
+  }
+  function speakFallback(){
+    if(!window.speechSynthesis)return;window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(cheatPhrases[Math.min(strikes-1,cheatPhrases.length-1)]);
+    u.rate=0.85;u.pitch=0.6;u.volume=1;
+    const vs=window.speechSynthesis.getVoices();
+    const pv=vs.find(v=>v.lang==="en-GB"||v.name.toLowerCase().includes("daniel"));if(pv)u.voice=pv;
+    u.onstart=()=>{document.getElementById("voiceStatus").style.display="block";};
+    u.onend=()=>{document.getElementById("voiceStatus").style.display="none";};
+    window.speechSynthesis.speak(u);
+  }
+  if(window.speechSynthesis){window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();}
+
+  function triggerCheat(){
+    if(allDone)return;
+    const now=Date.now();if(now-lastCheatTime<2000)return;lastCheatTime=now;
+    strikes++;
+    for(let i=0;i<MAX_STRIKES;i++){if(i<strikes)document.getElementById("dot-"+i).classList.add("active");}
+    document.getElementById("cheatLog").textContent=`INFRACTION #${strikes} — TIMESTAMP: ${new Date().toTimeString().slice(0,8)}`;
+    playCheatAudio();
+    isInPenalty=true;overlayVisible=true;penaltyRemaining=PENALTY_SECONDS;
+    document.getElementById("penaltyCountdown").textContent=penaltyRemaining;
+    document.getElementById("cheatOverlay").classList.add("active");
+    if(document.getElementById("portalInput"))document.getElementById("portalInput").disabled=true;
+    if(document.getElementById("portalBtn"))document.getElementById("portalBtn").disabled=true;
+    clearInterval(penaltyTimer);
+    penaltyTimer=setInterval(()=>{penaltyRemaining--;document.getElementById("penaltyCountdown").textContent=penaltyRemaining;if(penaltyRemaining<=0){clearInterval(penaltyTimer);isInPenalty=false;if(overlayVisible)dismissOverlay();if(!portalSolved&&!allDone){document.getElementById("portalInput").disabled=false;document.getElementById("portalBtn").disabled=false;document.getElementById("portalInput").focus();}}},1000);
+  }
+  function dismissOverlay(){document.getElementById("cheatOverlay").classList.remove("active");overlayVisible=false;}
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)triggerCheat();});
+  window.addEventListener("blur",()=>triggerCheat());
+
+  function selectOption(opt){
+    if(puzzleSolved)return;
+    selected=opt;
+    ["a","b","c","d"].forEach(o=>document.getElementById("opt-"+o).classList.remove("selected"));
+    document.getElementById("opt-"+opt).classList.add("selected");
+    document.getElementById("submitBtn").disabled=false;
+  }
+
+  const wrongMsgs=["✗ INCORRECT. MR. WHATSIT NOTES YOUR FALL. RESTART BALANCE. TRY AGAIN.","✗ WRONG. LOGIC ERROR DETECTED. THINK CAREFULLY.","✗ STILL INCORRECT. WHAT WOULD HAPPEN IF YOU LEFT THOSE TWO ALONE?","✗ NEGATIVE. RECONSIDER WHAT GETS LEFT BEHIND."];
+
+  function checkAnswer(){
+    if(puzzleSolved||!selected)return;
+    const wrongMsg=document.getElementById("wrongMsg");wrongMsg.style.display="none";
+    if(selected===CORRECT_OPTION){
+      puzzleSolved=true;
+      ["a","b","c","d"].forEach(o=>document.getElementById("opt-"+o).style.pointerEvents="none");
+      document.getElementById("opt-b").classList.add("correct-ans");
+      document.getElementById("submitBtn").disabled=true;
+      document.getElementById("codeReveal").style.display="block";
+      setTimeout(()=>{
+        document.getElementById("passwordSection").style.display="block";
+        setTimeout(()=>{document.getElementById("portalSection").style.display="block";document.getElementById("portalInput").focus();},800);
+      },1500);
+    }else{
+      attempts++;
+      document.getElementById("opt-"+selected).classList.add("wrong-ans");
+      setTimeout(()=>{document.getElementById("opt-"+selected).classList.remove("wrong-ans","selected");},800);
+      selected=null;document.getElementById("submitBtn").disabled=true;
+      wrongMsg.textContent=wrongMsgs[Math.min(attempts-1,wrongMsgs.length-1)];
+      wrongMsg.style.display="block";
+      setTimeout(()=>{wrongMsg.style.display="none";},3500);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded",()=>{
+    const pi=document.getElementById("portalInput");
+    if(pi)pi.addEventListener("keydown",e=>{if(e.key==="Enter")checkPortal();});
+  });
+
+  function checkPortal(){
+    if(portalSolved||isInPenalty)return;
+    const input=document.getElementById("portalInput");
+    const val=input.value.trim().toUpperCase();
+    if(!val)return;
+    const wrongMsg=document.getElementById("portalWrongMsg");wrongMsg.style.display="none";
+
+    if(val===CORRECT_PASSWORD){
+      portalSolved=true;allDone=true;
+      input.disabled=true;document.getElementById("portalBtn").disabled=true;
+      document.getElementById("portalSection").style.display="none";
+      document.getElementById("round2Unlock").style.display="block";
+    }else{
+      portalAttempts++;
+      input.classList.remove("shake");void input.offsetWidth;input.classList.add("shake");input.value="";
+      if(portalAttempts>=2){
+        // ELIMINATED
+        allDone=true;
+        input.disabled=true;document.getElementById("portalBtn").disabled=true;
+        document.getElementById("portalSection").style.display="none";
+        document.getElementById("eliminatedScreen").style.display="block";
+      }else{
+        const remaining=2-portalAttempts;
+        document.getElementById("triesLeft").textContent=`⚠ WRONG PASSWORD. ${remaining} ATTEMPT${remaining===1?"":"S"} REMAINING. NEXT FAILURE = ELIMINATION.`;
+        wrongMsg.textContent="✗ INCORRECT PASSWORD. THINK HARDER. USE YOUR LETTERS AND NUMBER.";
+        wrongMsg.style.display="block";
+        setTimeout(()=>{wrongMsg.style.display="none";},4000);
+      }
+    }
+  }
+</script>
+</body>
+</html>
