@@ -54,6 +54,7 @@
         
           if(input === "THE229"){
             document.getElementById("result").innerHTML = "Round 2 Unlocked 🔓";
+        
             setTimeout(()=>{
               window.location.href = "round2-silent-scatter.html";
             }, 2000);
@@ -61,9 +62,11 @@
         
           else if(input === "225"){
             let audio = new Audio("round3-completion.mp3");
+            audio.currentTime = 0;
             audio.play().catch(()=>{});
         
             document.getElementById("result").innerHTML = "Final Round Unlocked 🔓";
+        
             setTimeout(()=>{
               window.location.href = "finalround.html";
             }, 3000);
@@ -72,7 +75,8 @@
           else{
             document.getElementById("result").innerHTML = "ACCESS DENIED ❌ Try again";
           }
-     }
+        }
+         
     </script>
 
 </body>
