@@ -178,126 +178,33 @@
 </div>
 
 <script>
-  let selected=null,attempts=0,puzzleSolved=false;
-  let portalAttempts=0,portalSolved=false;
-  const CORRECT_OPTION="b";
-  const CORRECT_PASSWORD="THE229";
-  const PENALTY_SECONDS=30,MAX_STRIKES=3;
-  let strikes=0,penaltyTimer=null,penaltyRemaining=0,isInPenalty=false,overlayVisible=false,lastCheatTime=0,allDone=false;
-
-  function updateClock(){document.getElementById("clockDisplay").textContent=new Date().toTimeString().slice(0,8);}
-  setInterval(updateClock,1000);updateClock();
-
-  const sdEl=document.getElementById("strikeDots");
-  for(let i=0;i<MAX_STRIKES;i++){const d=document.createElement("div");d.className="strike-dot";d.id="dot-"+i;sdEl.appendChild(d);}
-
-  const cheatPhrases=["Cheating detected. Mr. Whatsit is watching you. Thirty second penalty applied.","You switched tabs. That was a mistake. Mr. Whatsit sees everything.","Nice try. Cheating logged. Thirty seconds added to your suffering."];
-
-  function playCheatAudio(){
-    const a=document.getElementById("cheatAudio");
-    if(a&&a.readyState>=2){a.currentTime=0;a.play().catch(()=>speakFallback());document.getElementById("voiceStatus").style.display="block";a.onended=()=>{document.getElementById("voiceStatus").style.display="none";};}
-    else speakFallback();
-  }
-  function speakFallback(){
-    if(!window.speechSynthesis)return;window.speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance(cheatPhrases[Math.min(strikes-1,cheatPhrases.length-1)]);
-    u.rate=0.85;u.pitch=0.6;u.volume=1;
-    const vs=window.speechSynthesis.getVoices();
-    const pv=vs.find(v=>v.lang==="en-GB"||v.name.toLowerCase().includes("daniel"));if(pv)u.voice=pv;
-    u.onstart=()=>{document.getElementById("voiceStatus").style.display="block";};
-    u.onend=()=>{document.getElementById("voiceStatus").style.display="none";};
-    window.speechSynthesis.speak(u);
-  }
-  if(window.speechSynthesis){window.speechSynthesis.getVoices();window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();}
-
-  function triggerCheat(){
-    if(allDone)return;
-    const now=Date.now();if(now-lastCheatTime<2000)return;lastCheatTime=now;
-    strikes++;
-    for(let i=0;i<MAX_STRIKES;i++){if(i<strikes)document.getElementById("dot-"+i).classList.add("active");}
-    document.getElementById("cheatLog").textContent=`INFRACTION #${strikes} — TIMESTAMP: ${new Date().toTimeString().slice(0,8)}`;
-    playCheatAudio();
-    isInPenalty=true;overlayVisible=true;penaltyRemaining=PENALTY_SECONDS;
-    document.getElementById("penaltyCountdown").textContent=penaltyRemaining;
-    document.getElementById("cheatOverlay").classList.add("active");
-    if(document.getElementById("portalInput"))document.getElementById("portalInput").disabled=true;
-    if(document.getElementById("portalBtn"))document.getElementById("portalBtn").disabled=true;
-    clearInterval(penaltyTimer);
-    penaltyTimer=setInterval(()=>{penaltyRemaining--;document.getElementById("penaltyCountdown").textContent=penaltyRemaining;if(penaltyRemaining<=0){clearInterval(penaltyTimer);isInPenalty=false;if(overlayVisible)dismissOverlay();if(!portalSolved&&!allDone){document.getElementById("portalInput").disabled=false;document.getElementById("portalBtn").disabled=false;document.getElementById("portalInput").focus();}}},1000);
-  }
-  function dismissOverlay(){document.getElementById("cheatOverlay").classList.remove("active");overlayVisible=false;}
-  document.addEventListener("visibilitychange",()=>{if(document.hidden)triggerCheat();});
-  window.addEventListener("blur",()=>triggerCheat());
-
-  function selectOption(opt){
-    if(puzzleSolved)return;
-    selected=opt;
-    ["a","b","c","d"].forEach(o=>document.getElementById("opt-"+o).classList.remove("selected"));
-    document.getElementById("opt-"+opt).classList.add("selected");
-    document.getElementById("submitBtn").disabled=false;
-  }
-
-  const wrongMsgs=["✗ INCORRECT. MR. WHATSIT NOTES YOUR FALL. RESTART BALANCE. TRY AGAIN.","✗ WRONG. LOGIC ERROR DETECTED. THINK CAREFULLY.","✗ STILL INCORRECT. WHAT WOULD HAPPEN IF YOU LEFT THOSE TWO ALONE?","✗ NEGATIVE. RECONSIDER WHAT GETS LEFT BEHIND."];
-
-  function checkAnswer(){
-    if(puzzleSolved||!selected)return;
-    const wrongMsg=document.getElementById("wrongMsg");wrongMsg.style.display="none";
-    if(selected===CORRECT_OPTION){
+     if(selected===CORRECT_OPTION){
+    
+      // 🔊 COMPLETION AUDIO
+      let audio = new Audio("audio/round1-completion.mp3");
+      audio.currentTime = 0;
+      audio.play().catch(()=>{});
+    
       puzzleSolved=true;
-      ["a","b","c","d"].forEach(o=>document.getElementById("opt-"+o).style.pointerEvents="none");
+    
+      ["a","b","c","d"].forEach(o=>
+        document.getElementById("opt-"+o).style.pointerEvents="none"
+      );
+    
       document.getElementById("opt-b").classList.add("correct-ans");
       document.getElementById("submitBtn").disabled=true;
       document.getElementById("codeReveal").style.display="block";
+    
       setTimeout(()=>{
         document.getElementById("passwordSection").style.display="block";
-        setTimeout(()=>{document.getElementById("portalSection").style.display="block";document.getElementById("portalInput").focus();},800);
+    
+        setTimeout(()=>{
+          document.getElementById("portalSection").style.display="block";
+          document.getElementById("portalInput").focus();
+        },800);
+    
       },1500);
-    }else{
-      attempts++;
-      document.getElementById("opt-"+selected).classList.add("wrong-ans");
-      setTimeout(()=>{document.getElementById("opt-"+selected).classList.remove("wrong-ans","selected");},800);
-      selected=null;document.getElementById("submitBtn").disabled=true;
-      wrongMsg.textContent=wrongMsgs[Math.min(attempts-1,wrongMsgs.length-1)];
-      wrongMsg.style.display="block";
-      setTimeout(()=>{wrongMsg.style.display="none";},3500);
     }
-  }
-
-  document.addEventListener("DOMContentLoaded",()=>{
-    const pi=document.getElementById("portalInput");
-    if(pi)pi.addEventListener("keydown",e=>{if(e.key==="Enter")checkPortal();});
-  });
-
-  function checkPortal(){
-    if(portalSolved||isInPenalty)return;
-    const input=document.getElementById("portalInput");
-    const val=input.value.trim().toUpperCase();
-    if(!val)return;
-    const wrongMsg=document.getElementById("portalWrongMsg");wrongMsg.style.display="none";
-
-    if(val===CORRECT_PASSWORD){
-      portalSolved=true;allDone=true;
-      input.disabled=true;document.getElementById("portalBtn").disabled=true;
-      document.getElementById("portalSection").style.display="none";
-      document.getElementById("round2Unlock").style.display="block";
-    }else{
-      portalAttempts++;
-      input.classList.remove("shake");void input.offsetWidth;input.classList.add("shake");input.value="";
-      if(portalAttempts>=2){
-        // ELIMINATED
-        allDone=true;
-        input.disabled=true;document.getElementById("portalBtn").disabled=true;
-        document.getElementById("portalSection").style.display="none";
-        document.getElementById("eliminatedScreen").style.display="block";
-      }else{
-        const remaining=2-portalAttempts;
-        document.getElementById("triesLeft").textContent=`⚠ WRONG PASSWORD. ${remaining} ATTEMPT${remaining===1?"":"S"} REMAINING. NEXT FAILURE = ELIMINATION.`;
-        wrongMsg.textContent="✗ INCORRECT PASSWORD. THINK HARDER. USE YOUR LETTERS AND NUMBER.";
-        wrongMsg.style.display="block";
-        setTimeout(()=>{wrongMsg.style.display="none";},4000);
-      }
-    }
-  }
 </script>
 </body>
 </html>
