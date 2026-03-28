@@ -113,18 +113,23 @@
 
 <script>
   let introPlayed = false;
-
+  
   function playIntro(){
     if(!introPlayed){
-      let audio = new Audio("round1-intro.mp3"); // change per round
+      let audio = new Audio("round1-intro.mp3");
       audio.play().catch(()=>{});
       introPlayed = true;
     }
   }
-
-window.onload = function(){
-  playIntro();
-};
+  
+  // ✅ trigger on user interaction
+  document.addEventListener("click", function(){
+    playIntro();
+  }, { once: true });
+  
+  document.addEventListener("keydown", function(){
+    playIntro();
+  }, { once: true });
   // ═══════════════ CHANGE PER STATION ═══════════════
   const RIDDLE = "Who makes it has no need of it.\nWho buys it has no use for it.\nWho uses it can neither see it nor feel it.\n\nWhat is it?";
   const CORRECT_ANSWERS = ["coffin","a coffin"];
